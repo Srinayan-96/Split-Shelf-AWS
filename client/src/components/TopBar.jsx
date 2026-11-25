@@ -1,15 +1,18 @@
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useHousehold } from '../hooks/useHousehold';
 import NotificationBell from './NotificationBell';
 import ThemeToggle from './ThemeToggle';
 import PersonName from './PersonName';
+import ProfilePictureModal from './ProfilePictureModal';
 
 // showBell is only true on pages inside a household (the bell and the links
 // need a household, and the NotificationProvider only exists there).
 export default function TopBar({ showBell = false }) {
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
   const { household } = useHousehold();
+  const [showAvatarModal, setShowAvatarModal] = useState(false);
 
   const me = household?.members?.find((m) => m.id === user.id);
   const isAdmin = me?.role === 'admin';
@@ -36,10 +39,24 @@ export default function TopBar({ showBell = false }) {
       </div>
       <div className="topbar-right">
         {showBell && <NotificationBell />}
-        <PersonName id={user.id} name={user.name} />
+        <PersonName
+          id={user.id}
+          name={user.name}
+          avatarUrl={user.avatarUrl}
+          onClick={() => setShowAvatarModal(true)}
+        />
         <ThemeToggle />
         <button className="btn btn-secondary btn-small" onClick={logout}>Log out</button>
       </div>
+
+      {showAvatarModal && (
+        <ProfilePictureModal
+          user={user}
+          onClose={() => setShowAvatarModal(false)}
+          onUpdated={(updated) => updateUser(updated)}
+        />
+      )}
     </header>
   );
 }
+

@@ -13,6 +13,8 @@ const userSchema = new mongoose.Schema(
     },
     // select:false means queries never return the hash unless we explicitly ask.
     passwordHash: { type: String, required: true, select: false },
+    avatarUrl: { type: String, default: null },
+    avatarKey: { type: String, default: null },
   },
   { timestamps: true }
 );

@@ -20,6 +20,7 @@ function toPublicHousehold(h) {
     members: h.members.map((m) => ({
       id: m.user._id,
       name: m.user.name,
+      avatarUrl: m.user.avatarUrl || null,
       role: m.role,
       joinedAt: m.joinedAt,
     })),
@@ -27,7 +28,7 @@ function toPublicHousehold(h) {
 }
 
 async function withMembers(household) {
-  await household.populate('members.user', 'name');
+  await household.populate('members.user', 'name avatarUrl');
   return toPublicHousehold(household);
 }
 
@@ -96,7 +97,7 @@ async function joinHousehold(userId, { inviteCode }) {
 async function getMyHousehold(userId) {
   const household = await Household.findOne({ 'members.user': userId }).populate(
     'members.user',
-    'name'
+    'name avatarUrl'
   );
   // Not in one yet is a normal state, not an error. The frontend shows onboarding.
   return household ? toPublicHousehold(household) : null;
@@ -189,7 +190,7 @@ async function regenerateInviteCode(householdId) {
         { _id: householdId },
         { $set: { inviteCode: generateInviteCode() } },
         { new: true }
-      ).populate('members.user', 'name');
+      ).populate('members.user', 'name avatarUrl');
       if (!household) throw ApiError.notFound('Household not found');
       return toPublicHousehold(household);
     } catch (err) {

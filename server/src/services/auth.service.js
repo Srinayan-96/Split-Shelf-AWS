@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const ApiError = require('../utils/ApiError');
 const { env } = require('../config/env');
+const s3Service = require('./s3.service');
 
 // Cost 12 = about 250ms per hash on a normal server. Slow on purpose: it makes
 // guessing passwords from a stolen database very expensive.
@@ -21,7 +22,7 @@ function signToken(userId) {
 
 // The only shape of a user the outside world ever sees. No hash, ever.
 function toPublicUser(user) {
-  return { id: user._id, name: user.name, email: user.email };
+  return { id: user._id, name: user.name, email: user.email, avatarUrl: user.avatarUrl || null };
 }
 
 async function register({ name, email, password }) {
@@ -60,4 +61,23 @@ async function getMe(userId) {
   return toPublicUser(user);
 }
 
-module.exports = { register, login, getMe };
+async function updateAvatar(userId, file) {
+  if (!file) throw ApiError.badRequest('No image file provided');
+  const user = await User.findById(userId);
+  if (!user) throw ApiError.unauthorized('User not found');
+
+  const { avatarKey, avatarUrl } = await s3Service.uploadProfilePicture(userId, file);
+  user.avatarKey = avatarKey;
+  user.avatarUrl = avatarUrl;
+  await user.save();
+
+  return toPublicUser(user);
+}
+
+async function getAvatarStream(userId) {
+  const user = await User.findById(userId);
+  if (!user || !user.avatarKey) return null;
+  return await s3Service.getProfilePictureStream(user.avatarKey);
+}
+
+module.exports = { register, login, getMe, updateAvatar, getAvatarStream };

@@ -15,6 +15,9 @@ const schema = z.object({
   REMINDER_CRON: z.string().default('0 8 * * *'),
   CRON_TIMEZONE: z.string().default('Asia/Kolkata'),
   CRON_SECRET: z.string().min(16).optional(),
+
+  S3_BUCKET: z.string().default('splitshelf-uploads'),
+  AWS_REGION: z.string().default('us-east-1'),
 });
 
 const parsed = schema.safeParse(process.env);

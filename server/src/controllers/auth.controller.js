@@ -17,4 +17,19 @@ const me = asyncHandler(async (req, res) => {
   res.json({ success: true, user });
 });
 
-module.exports = { register, login, me };
+const uploadAvatar = asyncHandler(async (req, res) => {
+  const user = await authService.updateAvatar(req.userId, req.file);
+  res.json({ success: true, user });
+});
+
+const getAvatar = asyncHandler(async (req, res) => {
+  const result = await authService.getAvatarStream(req.params.userId);
+  if (!result || !result.Body) {
+    return res.status(404).json({ message: 'Avatar not found' });
+  }
+  res.setHeader('Content-Type', result.ContentType || 'image/jpeg');
+  res.setHeader('Cache-Control', 'public, max-age=86400');
+  result.Body.pipe(res);
+});
+
+module.exports = { register, login, me, uploadAvatar, getAvatar };
