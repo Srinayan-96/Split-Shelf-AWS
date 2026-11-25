@@ -53,7 +53,7 @@ export default function ProfilePictureModal({ user, onClose, onUpdated }) {
         <div className="modal-header">
           <div className="modal-header-text">
             <h2 className="modal-title">Update Profile Picture</h2>
-            <p className="modal-subtitle">Saved securely in Amazon S3 &amp; MongoDB</p>
+            <p className="modal-subtitle">Choose a photo to personalize your account.</p>
           </div>
           <button
             type="button"
@@ -125,7 +125,7 @@ export default function ProfilePictureModal({ user, onClose, onUpdated }) {
             onClick={handleUpload}
             disabled={!file || loading}
           >
-            {loading ? 'Uploading...' : 'Save to S3'}
+            {loading ? 'Saving...' : 'Save changes'}
           </button>
         </div>
       </div>
