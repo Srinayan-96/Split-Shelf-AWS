@@ -1,0 +1,41 @@
+version: "3.8"
+services:
+  backend:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com/splitshelf-backend:latest
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGO_URI=${MONGO_URI}
+      - JWT_SECRET=${JWT_SECRET}
+      - CLIENT_URL=*
+      - S3_BUCKET=${S3_BUCKET:-splitshelf-uploads}
+      - AWS_REGION=ap-south-1
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: ap-south-1
+        awslogs-group: splitshelf-backend
+        awslogs-create-group: "true"
+    networks: [appnet]
+
+  frontend:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com/splitshelf-frontend:latest
+    ports:
+      - "80:80"
+    deploy:
+      replicas: 1
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: ap-south-1
+        awslogs-group: splitshelf-frontend
+        awslogs-create-group: "true"
+    networks: [appnet]
+
+networks:
+  appnet:
+    driver: overlay
