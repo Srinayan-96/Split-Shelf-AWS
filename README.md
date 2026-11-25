@@ -7,10 +7,11 @@
 ## What Problem Does It Solve?
 
 In shared apartments and flats, roommates often struggle with communal restocking:
-- *"Who finished the milk/detergent?"*
-- *"Whose turn is it to buy dish soap?"*
-- *"Did someone already buy eggs today?"*
-- *"How much did we spend on household supplies this month?"*
+
+- _"Who finished the milk/detergent?"_
+- _"Whose turn is it to buy dish soap?"_
+- _"Did someone already buy eggs today?"_
+- _"How much did we spend on household supplies this month?"_
 
 Split Shelf solves this by providing a single real-time communal dashboard where roommates can see shelf levels, log purchases with prices and notes, get notified when it's their turn, and review clear expense histories.
 
@@ -39,6 +40,7 @@ Split Shelf solves this by providing a single real-time communal dashboard where
 ## Tech Stack
 
 ### Frontend
+
 - **Framework**: React 18 (Vite)
 - **Routing**: React Router v6
 - **State Management**: React Context (`AuthContext`, `HouseholdContext`, `NotificationContext`, `ConfirmContext`)
@@ -46,6 +48,7 @@ Split Shelf solves this by providing a single real-time communal dashboard where
 - **Styling**: Vanilla CSS with customized design tokens and responsive layouts
 
 ### Backend
+
 - **Runtime**: Node.js
 - **Framework**: Express 5
 - **Database**: MongoDB with Mongoose ODM
@@ -91,6 +94,7 @@ splitshelf/
 ## Getting Started
 
 ### Prerequisites
+
 - [Node.js](https://nodejs.org/) (v20+ recommended)
 - [MongoDB](https://www.mongodb.com/) (local instance or MongoDB Atlas URI)
 
@@ -102,6 +106,7 @@ npm install
 ```
 
 Create a `.env` file in `server/` with:
+
 ```env
 PORT=5000
 MONGO_URI=mongodb://localhost:27017/splitshelf
@@ -110,9 +115,11 @@ CLIENT_URL=http://localhost:5173
 ```
 
 Start the backend:
+
 ```bash
 npm run dev
 ```
+
 The server will run on `http://localhost:5000`.
 
 ### 2. Frontend Setup
@@ -123,14 +130,17 @@ npm install
 ```
 
 Create a `.env` file in `client/` with:
+
 ```env
 VITE_API_URL=http://localhost:5000/api
 ```
 
 Start the frontend:
+
 ```bash
 npm run dev
 ```
+
 Open `http://localhost:5173` in your browser.
 
 ---
